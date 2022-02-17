@@ -1,10 +1,12 @@
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Definer {
-    private volatile int num = 1;
+    //private volatile int num = 1;
+    AtomicInteger atomicInteger = new AtomicInteger(1);
+    private int num = atomicInteger.get();
     private int n;
     private volatile boolean running = false;
     private volatile boolean numberDefined = false;
@@ -85,9 +87,9 @@ public class Definer {
                 e.printStackTrace();
             }
 
-            setNumberDefined(fizz(num));
+            setNumberDefined(fizz(atomicInteger.get()));
             if (isNumberDefined()) {
-                num++;
+                atomicInteger.addAndGet(1);
 
             }
         }
@@ -102,9 +104,9 @@ public class Definer {
                 e.printStackTrace();
             }
 
-            setNumberDefined(buzz(num));
+            setNumberDefined(buzz(atomicInteger.get()));
             if (isNumberDefined()) {
-                num++;
+                atomicInteger.addAndGet(1);
 
             }
         }
@@ -118,9 +120,9 @@ public class Definer {
                 e.printStackTrace();
             }
 
-            setNumberDefined(fizzbuzz(num));
+            setNumberDefined(fizzbuzz(atomicInteger.get()));
             if (isNumberDefined()) {
-                num++;
+                atomicInteger.addAndGet(1);
             }
         }
     });
@@ -133,9 +135,9 @@ public class Definer {
                 e.printStackTrace();
             }
 
-            setNumberDefined(number(num));
+            setNumberDefined(number(atomicInteger.get()));
             if (isNumberDefined()) {
-                num++;
+                atomicInteger.addAndGet(1);
 
             }
         }
@@ -145,7 +147,7 @@ public class Definer {
     public void startProgram(int n) {
         Thread runner = new Thread(() -> {
             while (true) {
-                if (getN() + 1 == num) {
+                if (getN() + 1 == atomicInteger.get()) {
                     setRunning(false);
                     System.out.println(getResult());
                     break;
